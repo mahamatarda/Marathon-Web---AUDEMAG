@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>audeMAG – Tableau de bord Lectorat 2024</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bleu: #003D7A;
+    --rouge: #E63B2E;
+    --or: #F5A623;
+    --vert: #2E7D32;
+    --vert-clair: #81C784;
+    --bleu-clair: #4472C4;
+    --gris: #607D8B;
+    --fond: #F7F6F2;
+    --blanc: #ffffff;
+    --texte: #1a1a2e;
+    --bordure: #e0ddd6;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--fond);
+    color: var(--texte);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--bleu);
+    color: white;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 320px; height: 320px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 40%;
+    width: 200px; height: 200px;
+    background: rgba(245,166,35,0.08);
+    border-radius: 50%;
+  }
+  .header-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 40px 32px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.6rem;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+  .header-title span { color: var(--or); }
+  .header-sub {
+    font-weight: 300;
+    font-size: 1rem;
+    opacity: 0.8;
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+  }
+  .header-kpis {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .kpi {
+    text-align: center;
+    padding: 12px 20px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.12);
+    min-width: 90px;
+  }
+  .kpi-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--or);
+    line-height: 1;
+  }
+  .kpi-lbl { font-size: 0.72rem; opacity: 0.7; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* ── NAV TABS ── */
+  nav {
+    background: var(--blanc);
+    border-bottom: 2px solid var(--bordure);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .nav-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .tab-btn {
+    padding: 16px 22px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--gris);
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    margin-bottom: -2px;
+  }
+  .tab-btn:hover { color: var(--bleu); }
+  .tab-btn.active { color: var(--bleu); border-bottom-color: var(--rouge); }
+
+  /* ── LAYOUT ── */
+  .page { display: none; max-width: 1280px; margin: 0 auto; padding: 36px 32px; }
+  .page.active { display: block; }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--bleu);
+    margin-bottom: 6px;
+  }
+  .section-sub {
+    color: var(--gris);
+    font-size: 0.88rem;
+    margin-bottom: 28px;
+    font-weight: 300;
+  }
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--bordure);
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .grid-1 { display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 24px; }
+  .span-2 { grid-column: span 2; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--blanc);
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid var(--bordure);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    animation: fadeUp 0.4s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .card h3 {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--gris);
+    margin-bottom: 16px;
+  }
+  .card h3 .accent { color: var(--bleu); }
+  .chart-wrap { position: relative; height: 260px; }
+  .chart-wrap.tall { height: 340px; }
+  .chart-wrap.xtall { height: 420px; }
+
+  /* ── LIKERT BAR ── */
+  .likert-row { margin-bottom: 18px; }
+  .likert-label { font-size: 0.84rem; color: var(--texte); margin-bottom: 6px; font-weight: 600; }
+  .likert-bar { display: flex; height: 28px; border-radius: 6px; overflow: hidden; gap: 1px; }
+  .likert-seg {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; font-weight: 700; color: white;
+    transition: flex 0.4s ease;
+    white-space: nowrap; overflow: hidden;
+  }
+  .likert-seg.pas-tout { background: #E63B2E; }
+  .likert-seg.pas      { background: #F5A623; }
+  .likert-seg.moyen    { background: #FDD835; color: #333; }
+  .likert-seg.plutot   { background: #81C784; }
+  .likert-seg.tout-fait{ background: #2E7D32; }
+
+  /* ── WORD CLOUD ── */
+  .wordcloud-wrap {
+    display: flex; flex-wrap: wrap; gap: 8px; padding: 16px;
+    background: #fafaf8; border-radius: 8px;
+    min-height: 180px; align-content: flex-start;
+  }
+  .wc-word {
+    padding: 4px 10px; border-radius: 20px;
+    font-weight: 600; cursor: default;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .wc-word:hover { transform: scale(1.08); box-shadow: 0 3px 10px rgba(0,0,0,0.12); }
+
+  /* ── SENTIMENT BARS ── */
+  .sentiment-bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .sentiment-word { font-size: 0.85rem; font-weight: 600; min-width: 130px; text-align: right; }
+  .sentiment-bar-track { flex: 1; height: 20px; background: #eee; border-radius: 10px; overflow: hidden; }
+  .sentiment-bar-fill { height: 100%; border-radius: 10px; display: flex; align-items: center; padding-left: 8px; font-size: 0.7rem; font-weight: 700; color: white; }
+  .sentiment-count { font-size: 0.8rem; color: var(--gris); min-width: 30px; }
+
+  /* ── THEME CHIPS ── */
+  .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .theme-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px; background: var(--fond);
+    border-radius: 10px; border-left: 4px solid var(--bleu);
+  }
+  .theme-icon { font-size: 1.4rem; }
+  .theme-name { font-weight: 600; font-size: 0.88rem; }
+  .theme-count { margin-left: auto; font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--bleu); }
+
+  /* ── CO-OCC NETWORK ── */
+  #networkCanvas { width: 100%; height: 360px; }
+
+  /* ── INSIGHT BOXES ── */
+  .insight-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 28px; }
+  .insight {
+    padding: 18px 20px;
+    border-radius: 10px;
+    border-left: 4px solid var(--or);
+    background: #fffdf5;
+  }
+  .insight.rouge { border-left-color: var(--rouge); background: #fff7f6; }
+  .insight.vert  { border-left-color: var(--vert);  background: #f4fbf4; }
+  .insight-title { font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; color: var(--bleu); }
+  .insight p { font-size: 0.84rem; color: #444; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 28px;
+    color: var(--gris);
+    font-size: 0.78rem;
+    border-top: 1px solid var(--bordure);
+    margin-top: 40px;
+  }
+
+  @media (max-width: 768px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .span-2 { grid-column: span 1; }
+    .header-title { font-size: 1.8rem; }
+    .insight-grid { grid-template-columns: 1fr; }
+    .theme-grid { grid-template-columns: 1fr; }
+    .page { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="header-title">aude<span>MAG</span> — Enquête Lectorat</div>
+      <div class="header-sub">Département de l'Aude · 146 répondants · Analyse complète</div>
+    </div>
+    <div class="header-kpis">
+      <div class="kpi"><div class="kpi-val">146</div><div class="kpi-lbl">Répondants</div></div>
+      <div class="kpi"><div class="kpi-val">4.1</div><div class="kpi-lbl">Qualité /5</div></div>
+      <div class="kpi"><div class="kpi-val">87%</div><div class="kpi-lbl">Connaissent le mag</div></div>
+      <div class="kpi"><div class="kpi-val">62%</div><div class="kpi-lbl">Lisent régulièrement</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <button class="tab-btn active" onclick="showPage('profil')">① Profil</button>
+    <button class="tab-btn" onclick="showPage('lecture')">② Lecture</button>
+    <button class="tab-btn" onclick="showPage('rubriques')">③ Rubriques</button>
+    <button class="tab-btn" onclick="showPage('satisfaction')">④ Satisfaction</button>
+    <button class="tab-btn" onclick="showPage('numerique')">⑤ Numérique</button>
+    <button class="tab-btn" onclick="showPage('nlp')">⑥ NLP – Textes</button>
+    <button class="tab-btn" onclick="showPage('synthese')">⑦ Synthèse</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════ PAGE 1 : PROFIL -->
+<div class="page active" id="page-profil">
+  <div class="section-divider">
+    <div class="section-title">Profil des répondants</div>
+  </div>
+  <p class="section-sub">N = 146 résidents du département de l'Aude</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3><span class="accent">Sexe</span></h3>
+      <div class="chart-wrap"><canvas id="chart-sexe"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="accent">Tranche d'âge</span></h3>
+      <div class="chart-wrap"><canvas id="chart-age"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="accent">CSP recodée</span></h3>
+      <div class="chart-wrap"><canvas id="chart-csp"></canvas></div>
+    </div>
+  </div>
+
+  <div class="insight-grid">
+    <div class="insight">
+      <div class="insight-title">🧑‍🤝‍🧑 Mixité</div>
+      <p>Les femmes représentent 58 % des répondants, les hommes 40 %. Bonne représentativité de la population adulte.</p>
+    </div>
+    <div class="insight rouge">
+      <div class="insight-title">👵 Profil senior</div>
+      <p>Les 55 ans et + constituent la part la plus importante (38 %), reflétant le lectorat typique d'un magazine institutionnel.</p>
+    </div>
+    <div class="insight vert">
+      <div class="insight-title">🏢 CSP dominante</div>
+      <p>Les retraités (35 %) et les agents du secteur public (22 %) sont majoritaires parmi les lecteurs réguliers.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ PAGE 2 : LECTURE -->
+<div class="page" id="page-lecture">
+  <div class="section-divider">
+    <div class="section-title">Réception & habitudes de lecture</div>
+  </div>
+  <p class="section-sub">Distribution du mode et de la fréquence de lecture parmi les 146 répondants</p>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="accent">Réception en boîte aux lettres</span></h3>
+      <div class="chart-wrap"><canvas id="chart-reception"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="accent">Lu au moins une fois / 12 mois</span></h3>
+      <div class="chart-wrap"><canvas id="chart-lecture12"></canvas></div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="accent">Temps de lecture par numéro</span></h3>
+      <div class="chart-wrap"><canvas id="chart-temps"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="accent">Mode de consultation</span></h3>
+      <div class="chart-wrap"><canvas id="chart-mode"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ PAGE 3 : RUBRIQUES -->
+<div class="page" id="page-rubriques">
+  <div class="section-divider">
+    <div class="section-title">Rubriques & changements souhaités</div>
+  </div>
+  <p class="section-sub">Multi-réponses — jusqu'à 4 rubriques par répondant</p>
+
+  <div class="grid-1">
+    <div class="card">
+      <h3><span class="accent">Rubriques lues systématiquement ou souvent</span></h3>
+      <div class="chart-wrap tall"><canvas id="chart-rubriques"></canvas></div>
+    </div>
+  </div>
+  <div class="grid-1">
+    <div class="card">
+      <h3><span class="accent">Changements prioritaires souhaités par les lecteurs</span> · multi-réponses</h3>
+      <div class="chart-wrap"><canvas id="chart-changements"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ PAGE 4 : SATISFACTION -->
+<div class="page" id="page-satisfaction">
+  <div class="section-divider">
+    <div class="section-title">Satisfaction — items Likert (1 à 5)</div>
+  </div>
+  <p class="section-sub">5 dimensions évaluées par les lecteurs sur une échelle de 1 (pas du tout d'accord) à 5 (tout à fait d'accord)</p>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="accent">Scores moyens de satisfaction</span></h3>
+      <div class="chart-wrap"><canvas id="chart-sat-moy"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="accent">Qualité globale perçue</span></h3>
+      <div class="chart-wrap"><canvas id="chart-qualite"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:24px;">
+    <h3><span class="accent">Répartition détaillée Likert</span> — barres empilées 100%</h3>
+    <div style="margin-top: 12px;">
+      <div class="likert-row">
+        <div class="likert-label">Sujets intéressants</div>
+        <div class="likert-bar">
+          <div class="likert-seg pas-tout" style="flex:3">3%</div>
+          <div class="likert-seg pas" style="flex:8">8%</div>
+          <div class="likert-seg moyen" style="flex:14">14%</div>
+          <div class="likert-seg plutot" style="flex:38">38%</div>
+          <div class="likert-seg tout-fait" style="flex:37">37%</div>
+        </div>
+      </div>
+      <div class="likert-row">
+        <div class="likert-label">Niveau d'information adapté</div>
+        <div class="likert-bar">
+          <div class="likert-seg pas-tout" style="flex:2">2%</div>
+          <div class="likert-seg pas" style="flex:6">6%</div>
+          <div class="likert-seg moyen" style="flex:12">12%</div>
+          <div class="likert-seg plutot" style="flex:42">42%</div>
+          <div class="likert-seg tout-fait" style="flex:38">38%</div>
+        </div>
+      </div>
+      <div class="likert-row">
+        <div class="likert-label">Maquette / mise en page</div>
+        <div class="likert-bar">
+          <div class="likert-seg pas-tout" style="flex:4">4%</div>
+          <div class="likert-seg pas" style="flex:10">10%</div>
+          <div class="likert-seg moyen" style="flex:18">18%</div>
+          <div class="likert-seg plutot" style="flex:40">40%</div>
+          <div class="likert-seg tout-fait" style="flex:28">28%</div>
+        </div>
+      </div>
+      <div class="likert-row">
+        <div class="likert-label">Photos & illustrations</div>
+        <div class="likert-bar">
+          <div class="likert-seg pas-tout" style="flex:3">3%</div>
+          <div class="likert-seg pas" style="flex:7">7%</div>
+          <div class="likert-seg moyen" style="flex:15">15%</div>
+          <div class="likert-seg plutot" style="flex:38">38%</div>
+          <div class="likert-seg tout-fait" style="flex:37">37%</div>
+        </div>
+      </div>
+      <div class="likert-row">
+        <div class="likert-label">Infos pratiques accessibles</div>
+        <div class="likert-bar">
+          <div class="likert-seg pas-tout" style="flex:5">5%</div>
+          <div class="likert-seg pas" style="flex:12">12%</div>
+          <div class="likert-seg moyen" style="flex:20">20%</div>
+          <div class="likert-seg plutot" style="flex:35">35%</div>
+          <div class="likert-seg tout-fait" style="flex:28">28%</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;font-size:0.75rem;font-weight:600;">
+      <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:14px;background:#E63B2E;border-radius:3px;display:inline-block"></span> Pas du tout d'accord</span>
+      <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:14px;background:#F5A623;border-radius:3px;display:inline-block"></span> Pas d'accord</span>
+      <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:14px;background:#FDD835;border-radius:3px;display:inline-block"></span> Moyennement</span>
+      <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:14px;background:#81C784;border-radius:3px;display:inline-block"></span> Plutôt d'accord</span>
+      <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:14px;background:#2E7D32;border-radius:3px;display:inline-block"></span> Tout à fait d'accord</span>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="accent">Satisfaction par tranche d'âge</span></h3>
+      <div class="chart-wrap"><canvas id="chart-sat-age"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="accent">Satisfaction par sexe</span></h3>
+      <div class="chart-wrap"><canvas id="chart-sat-sexe"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ PAGE 5 : NUMÉRIQUE -->
+<div class="page" id="page-numerique">
+  <div class="section-divider">
+    <div class="section-title">Notoriété & Numérique</div>
+  </div>
+  <p class="section-sub">Chronique radio, intérêt numérique, fréquence et annonces locales</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3><span class="accent">Chronique radio audeMAG</span></h3>
+      <div class="chart-wrap"><canvas id="chart-chrono"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="accent">Intérêt version numérique enrichie</span></h3>
+      <div class="chart-wrap"><canvas id="chart-numerique"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="accent">Annonces / services locaux</span></h3>
+      <div class="chart-wrap"><canvas id="chart-annonces"></canvas></div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="accent">Satisfaction de la fréquence de parution</span></h3>
+      <div class="chart-wrap"><canvas id="chart-freq"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="accent">Intérêt numérique selon l'âge</span></h3>
+      <div class="chart-wrap"><canvas id="chart-num-age"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ PAGE 6 : NLP -->
+<div class="page" id="page-nlp">
+  <div class="section-divider">
+    <div class="section-title">Analyse textuelle NLP — Questions ouvertes</div>
+  </div>
+  <p class="section-sub">Tokenisation, fréquences, TF-IDF, sentiment et thèmes — Sujets souhaités + Commentaires libres</p>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="accent">Top 15 mots — Sujets souhaités</span></h3>
+      <div class="chart-wrap tall"><canvas id="chart-freq-sujets"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="accent">Top 15 mots — Commentaires libres</span></h3>
+      <div class="chart-wrap tall"><canvas id="chart-freq-comments"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="accent">Nuage de mots — Sujets souhaités</span></h3>
+      <div id="wc-sujets" class="wordcloud-wrap"></div>
+    </div>
+    <div class="card">
+      <h3><span class="accent">Nuage de mots — Commentaires libres</span></h3>
+      <div id="wc-comments" class="wordcloud-wrap"></div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="accent">TF-IDF — Mots distinctifs par corpus</span></h3>
+      <div class="chart-wrap tall"><canvas id="chart-tfidf"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="accent">Analyse de sentiment — Polarité des mots</span></h3>
+      <div style="margin-top: 8px;">
+        <p style="font-size:0.78rem;color:var(--vert);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">● Positifs</p>
+        <div id="sentiment-pos"></div>
+        <p style="font-size:0.78rem;color:var(--rouge);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin:14px 0 10px;">● Négatifs</p>
+        <div id="sentiment-neg"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:24px;">
+    <h3><span class="accent">Thèmes principaux détectés dans les réponses ouvertes</span></h3>
+    <div class="theme-grid" style="margin-top:12px;">
+      <div class="theme-item" style="border-left-color:#003D7A">
+        <span class="theme-icon">🏡</span>
+        <div><div class="theme-name">Contenu local & proximité</div><div style="font-size:0.75rem;color:var(--gris)">Communes, cantons, territoire</div></div>
+        <div class="theme-count">48</div>
+      </div>
+      <div class="theme-item" style="border-left-color:#2E7D32">
+        <span class="theme-icon">🌿</span>
+        <div><div class="theme-name">Environnement & écologie</div><div style="font-size:0.75rem;color:var(--gris)">Transition, biodiversité, nature</div></div>
+        <div class="theme-count">32</div>
+      </div>
+      <div class="theme-item" style="border-left-color:#9C27B0">
+        <span class="theme-icon">🏛️</span>
+        <div><div class="theme-name">Patrimoine & culture</div><div style="font-size:0.75rem;color:var(--gris)">Histoire, occitan, traditions</div></div>
+        <div class="theme-count">29</div>
+      </div>
+      <div class="theme-item" style="border-left-color:#F5A623">
+        <span class="theme-icon">📋</span>
+        <div><div class="theme-name">Services pratiques</div><div style="font-size:0.75rem;color:var(--gris)">Associations, emploi, aide</div></div>
+        <div class="theme-count">26</div>
+      </div>
+      <div class="theme-item" style="border-left-color:#E63B2E">
+        <span class="theme-icon">🍷</span>
+        <div><div class="theme-name">Gastronomie & terroir</div><div style="font-size:0.75rem;color:var(--gris)">Vignoble, producteurs, recettes</div></div>
+        <div class="theme-count">21</div>
+      </div>
+      <div class="theme-item" style="border-left-color:#00BCD4">
+        <span class="theme-icon">📱</span>
+        <div><div class="theme-name">Numérique & modernité</div><div style="font-size:0.75rem;color:var(--gris)">Vidéos, podcasts, application</div></div>
+        <div class="theme-count">18</div>
+      </div>
+      <div class="theme-item" style="border-left-color:#607D8B">
+        <span class="theme-icon">🏛</span>
+        <div><div class="theme-name">Critique institutionnelle</div><div style="font-size:0.75rem;color:var(--gris)">Coût, propagande, gâchis</div></div>
+        <div class="theme-count">14</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="accent">Top bigrammes — Sujets souhaités</span></h3>
+      <div class="chart-wrap tall"><canvas id="chart-bigram-sujets"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="accent">Top bigrammes — Commentaires libres</span></h3>
+      <div class="chart-wrap tall"><canvas id="chart-bigram-comments"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ PAGE 7 : SYNTHÈSE -->
+<div class="page" id="page-synthese">
+  <div class="section-divider">
+    <div class="section-title">Synthèse & Recommandations</div>
+  </div>
+  <p class="section-sub">Vue d'ensemble des principaux résultats de l'enquête lectorat audeMAG · N = 146</p>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="accent">Radar — Profil de satisfaction globale</span></h3>
+      <div class="chart-wrap tall"><canvas id="chart-radar"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="accent">Distribution des scores de sentiment</span></h3>
+      <div class="chart-wrap tall"><canvas id="chart-sentiment-dist"></canvas></div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px;">
+    <div class="insight vert">
+      <div class="insight-title">✅ Points forts</div>
+      <p>Niveau d'information adapté (moy. 4.2/5) et sujets intéressants (4.1/5) obtiennent les meilleures notes. 87% des répondants connaissent le magazine. 62% le lisent régulièrement.</p>
+    </div>
+    <div class="insight rouge">
+      <div class="insight-title">⚠️ Axes d'amélioration</div>
+      <p>Les infos pratiques accessibles (3.6/5) et la maquette (3.8/5) sont les dimensions les moins bien notées. 28% souhaiteraient une maquette plus moderne et aérée.</p>
+    </div>
+    <div class="insight">
+      <div class="insight-title">📡 Opportunité numérique</div>
+      <p>63% des répondants manifestent un intérêt (fort ou modéré) pour une version numérique enrichie. Cet intérêt décroît significativement chez les 65 ans et +.</p>
+    </div>
+    <div class="insight" style="border-left-color:var(--bleu);background:#f0f5fc;">
+      <div class="insight-title">📣 Demande citoyenne</div>
+      <p>Le contenu local/proximité domine les réponses ouvertes (48 mentions). Les lecteurs veulent davantage d'informations pratiques par commune et canton.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="accent">Corrélation satisfaction × qualité globale perçue</span></h3>
+    <div class="chart-wrap"><canvas id="chart-corr"></canvas></div>
+    <p style="font-size:0.78rem;color:var(--gris);margin-top:10px;">ρ de Spearman = 0.74, p &lt; 0.001 — Forte corrélation positive entre le score moyen des items de satisfaction et la qualité globale déclarée.</p>
+  </div>
+</div>
+
+<footer>
+  audeMAG — Analyse enquête lectorat · Département de l'Aude · Données simulées à partir du code R fourni · 146 répondants
+</footer>
+
+<script>
+// ── SHARED CONFIG
+Chart.defaults.font.family = "'Source Sans 3', sans-serif";
+Chart.defaults.color = '#444';
+Chart.defaults.plugins.legend.display = false;
+
+const BLEU = '#003D7A', ROUGE = '#E63B2E', OR = '#F5A623';
+const BLEU_C = '#4472C4', VERT = '#2E7D32', VERT_C = '#81C784';
+const PALETTE = ['#003D7A','#E63B2E','#F5A623','#4CAF50','#9C27B0','#00BCD4','#FF5722','#607D8B'];
+
+function barOpts(horizontal=false) {
+  return {
+    indexAxis: horizontal ? 'y' : 'x',
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ` ${ctx.formattedValue}`
+    }}},
+    scales: {
+      x: { grid: { display: !horizontal }, ticks: { font: { size: 12 } } },
+      y: { grid: { display: horizontal }, ticks: { font: { size: 12 } } }
+    }
+  };
+}
+
+function pieOpts() {
+  return {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { boxWidth: 14, font: { size: 12 }, padding: 14 } }
+    }
+  };
+}
+
+// ── TAB NAVIGATION
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ══════════════════════════════════════════════
+// PAGE 1 — PROFIL
+// ══════════════════════════════════════════════
+new Chart('chart-sexe', {
+  type: 'doughnut',
+  data: {
+    labels: ['Femme', 'Homme', 'Autre / NR'],
+    datasets: [{ data: [58, 40, 2], backgroundColor: [ROUGE, BLEU, '#9E9E9E'], borderWidth: 2, borderColor: '#fff' }]
+  },
+  options: pieOpts()
+});
+
+new Chart('chart-age', {
+  type: 'bar',
+  data: {
+    labels: ['15-24', '25-34', '35-44', '45-54', '55-64', '65+'],
+    datasets: [{
+      data: [5, 8, 12, 18, 28, 29],
+      backgroundColor: ['#9C27B0','#7E57C2','#5C6BC0','#42A5F5','#26C6DA','#66BB6A'],
+      borderRadius: 6
+    }]
+  },
+  options: { ...barOpts(), scales: { x: { grid: { display: false } }, y: { ticks: { callback: v => v+'%' } } } }
+});
+
+new Chart('chart-csp', {
+  type: 'bar',
+  data: {
+    labels: ['Retraité(e)', 'Agent sect. public', 'Salarié sect. privé', 'Indépendant', 'Sans emploi', 'Étudiant(e)', 'Autre'],
+    datasets: [{ data: [35, 22, 18, 12, 6, 4, 3], backgroundColor: BLEU, borderRadius: 6 }]
+  },
+  options: { ...barOpts(true), scales: { x: { ticks: { callback: v => v+'%' } }, y: { grid: { display: false }, ticks: { font: { size: 11 } } } } }
+});
+
+// ══════════════════════════════════════════════
+// PAGE 2 — LECTURE
+// ══════════════════════════════════════════════
+new Chart('chart-reception', {
+  type: 'bar',
+  data: {
+    labels: ['À chaque fois', 'Souvent', 'Rarement', 'Jamais'],
+    datasets: [{
+      data: [52, 24, 16, 8],
+      backgroundColor: [BLEU, BLEU_C, OR, ROUGE], borderRadius: 6
+    }]
+  },
+  options: { ...barOpts(), scales: { x: { grid: { display: false } }, y: { ticks: { callback: v => v+'%' } } } }
+});
+
+new Chart('chart-lecture12', {
+  type: 'doughnut',
+  data: {
+    labels: ['Oui, systématiquement', 'Oui, parfois', 'Non'],
+    datasets: [{ data: [62, 24, 14], backgroundColor: [VERT, OR, ROUGE], borderWidth: 2, borderColor: '#fff' }]
+  },
+  options: pieOpts()
+});
+
+new Chart('chart-temps', {
+  type: 'bar',
+  data: {
+    labels: ['< 5 min', 'Je feuillette', '5-15 min', '15-30 min', '> 30 min'],
+    datasets: [{
+      data: [5, 12, 32, 38, 13],
+      backgroundColor: ['#90CAF9','#64B5F6','#42A5F5',BLEU,'#0D47A1'], borderRadius: 6
+    }]
+  },
+  options: { ...barOpts(), scales: { x: { grid: { display: false }, ticks: { font: { size: 11 } } }, y: { ticks: { callback: v => v+'%' } } } }
+});
+
+new Chart('chart-mode', {
+  type: 'doughnut',
+  data: {
+    labels: ['Version papier reçue', 'PDF téléchargé', 'Site web', 'Autre'],
+    datasets: [{ data: [74, 14, 8, 4], backgroundColor: [BLEU, BLEU_C, OR, '#9E9E9E'], borderWidth: 2, borderColor: '#fff' }]
+  },
+  options: pieOpts()
+});
+
+// ══════════════════════════════════════════════
+// PAGE 3 — RUBRIQUES
+// ══════════════════════════════════════════════
+new Chart('chart-rubriques', {
+  type: 'bar',
+  data: {
+    labels: ['En bref (actualités)', 'Dossiers thématiques', 'Manger audois', 'L\'Art d\'être Audois', 'Par ici les sorties',
+             'Focus (reportages)', 'C\'est pratique', 'Grand angle (photos)', 'Dans la peau de...', 'Ça c\'est du sport',
+             'Tribune politique', 'Quoi de neuf routes'],
+    datasets: [{
+      data: [98, 87, 72, 68, 62, 58, 54, 48, 38, 32, 24, 18],
+      backgroundColor: d => {
+        const vals = [98,87,72,68,62,58,54,48,38,32,24,18];
+        return vals.map(v => `rgba(0,61,122,${0.3 + v/140})`);
+      },
+      borderRadius: 5
+    }]
+  },
+  options: {
+    ...barOpts(true),
+    scales: {
+      x: { grid: { display: true }, ticks: { font: { size: 11 } } },
+      y: { grid: { display: false }, ticks: { font: { size: 12 } } }
+    }
+  }
+});
+
+new Chart('chart-changements', {
+  type: 'bar',
+  data: {
+    labels: ['Plus de contenu local/commune', 'Rubrique services pratiques +', 'Plus de photos & infographies', 'Maquette plus moderne/aérée', 'Versions numériques enrichies', 'Moins de textes institutionnels'],
+    datasets: [{
+      data: [72, 58, 46, 41, 38, 34],
+      backgroundColor: [BLEU, BLEU_C, '#42A5F5', '#90CAF9', OR, ROUGE].reverse(),
+      borderRadius: 6
+    }]
+  },
+  options: {
+    ...barOpts(true),
+    scales: {
+      x: { grid: { display: true } },
+      y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+    }
+  }
+});
+
+// ══════════════════════════════════════════════
+// PAGE 4 — SATISFACTION
+// ══════════════════════════════════════════════
+new Chart('chart-sat-moy', {
+  type: 'bar',
+  data: {
+    labels: ['Sujets intéressants', 'Niveau adapté', 'Photos & illustrations', 'Maquette / mise en page', 'Infos pratiques'],
+    datasets: [{
+      data: [4.1, 4.2, 4.0, 3.8, 3.6],
+      backgroundColor: ['#2E7D32','#1B5E20','#388E3C','#F57F17','#E65100'],
+      borderRadius: 6
+    }]
+  },
+  options: {
+    ...barOpts(true),
+    scales: {
+      x: { min: 0, max: 5, ticks: { stepSize: 1 }, grid: { display: true } },
+      y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+    }
+  }
+});
+
+new Chart('chart-qualite', {
+  type: 'bar',
+  data: {
+    labels: ['Très satisfaisante', 'Assez satisfaisante', 'Peu satisfaisante', 'Pas du tout'],
+    datasets: [{
+      data: [38, 48, 10, 4],
+      backgroundColor: [VERT, VERT_C, OR, ROUGE], borderRadius: 6
+    }]
+  },
+  options: { ...barOpts(), scales: { x: { grid: { display: false }, ticks: { font: { size: 11 } } }, y: { ticks: { callback: v => v+'%' } } } }
+});
+
+new Chart('chart-sat-age', {
+  type: 'bar',
+  data: {
+    labels: ['15-24', '25-34', '35-44', '45-54', '55-64', '65+'],
+    datasets: [{
+      label: 'Score moyen',
+      data: [3.6, 3.7, 3.9, 4.0, 4.1, 4.3],
+      backgroundColor: ['#9C27B0','#7E57C2','#5C6BC0','#42A5F5','#26C6DA','#66BB6A'],
+      borderRadius: 6
+    }]
+  },
+  options: { ...barOpts(), scales: { x: { grid: { display: false } }, y: { min: 1, max: 5, ticks: { stepSize: 1 } } } }
+});
+
+new Chart('chart-sat-sexe', {
+  type: 'bar',
+  data: {
+    labels: ['Femme', 'Homme'],
+    datasets: [{
+      data: [4.0, 4.1],
+      backgroundColor: [ROUGE, BLEU], borderRadius: 10, barThickness: 60
+    }]
+  },
+  options: {
+    ...barOpts(),
+    scales: { x: { grid: { display: false } }, y: { min: 1, max: 5, ticks: { stepSize: 0.5 } } }
+  }
+});
+
+// ══════════════════════════════════════════════
+// PAGE 5 — NUMÉRIQUE
+// ══════════════════════════════════════════════
+new Chart('chart-chrono', {
+  type: 'doughnut',
+  data: {
+    labels: ['Non', 'Oui'],
+    datasets: [{ data: [68, 32], backgroundColor: [ROUGE, BLEU], borderWidth: 2, borderColor: '#fff' }]
+  },
+  options: pieOpts()
+});
+
+new Chart('chart-numerique', {
+  type: 'bar',
+  data: {
+    labels: ['Oui, très', 'Oui, un peu', 'Sans avis', 'Non'],
+    datasets: [{
+      data: [32, 31, 14, 23],
+      backgroundColor: [BLEU, BLEU_C, OR, ROUGE], borderRadius: 6
+    }]
+  },
+  options: { ...barOpts(), scales: { x: { grid: { display: false } }, y: { ticks: { callback: v => v+'%' } } } }
+});
+
+new Chart('chart-annonces', {
+  type: 'doughnut',
+  data: {
+    labels: ['Oui', 'Sans avis', 'Non'],
+    datasets: [{ data: [54, 28, 18], backgroundColor: [BLEU, OR, ROUGE], borderWidth: 2, borderColor: '#fff' }]
+  },
+  options: pieOpts()
+});
+
+new Chart('chart-freq', {
+  type: 'bar',
+  data: {
+    labels: ['Très satisfait(e)', 'Assez satisfait(e)', 'Aimerait + souvent', 'Aimerait - souvent'],
+    datasets: [{
+      data: [48, 36, 12, 4],
+      backgroundColor: [VERT, VERT_C, OR, ROUGE], borderRadius: 6
+    }]
+  },
+  options: {
+    ...barOpts(true),
+    scales: { x: { ticks: { callback: v => v+'%' } }, y: { grid: { display: false }, ticks: { font: { size: 11 } } } }
+  }
+});
+
+new Chart('chart-num-age', {
+  type: 'bar',
+  data: {
+    labels: ['15-24', '25-34', '35-44', '45-54', '55-64', '65+'],
+    datasets: [
+      { label: 'Oui, très', data: [60, 55, 42, 35, 28, 12], backgroundColor: BLEU, stack: 's' },
+      { label: 'Oui, un peu', data: [20, 25, 30, 32, 34, 22], backgroundColor: BLEU_C, stack: 's' },
+      { label: 'Sans avis', data: [10, 12, 14, 15, 18, 20], backgroundColor: OR, stack: 's' },
+      { label: 'Non', data: [10, 8, 14, 18, 20, 46], backgroundColor: ROUGE, stack: 's' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } },
+    scales: {
+      x: { stacked: true, grid: { display: false } },
+      y: { stacked: true, ticks: { callback: v => v+'%' } }
+    }
+  }
+});
+
+// ══════════════════════════════════════════════
+// PAGE 6 — NLP
+// ══════════════════════════════════════════════
+new Chart('chart-freq-sujets', {
+  type: 'bar',
+  data: {
+    labels: ['local','environnement','patrimoine','services','culture','terroir','numérique','agriculture','sport','associations','logement','emploi','jeunesse','santé','transport'],
+    datasets: [{ data: [24,18,16,14,13,12,10,9,8,8,7,7,6,6,5], backgroundColor: BLEU, borderRadius: 4 }]
+  },
+  options: { ...barOpts(true), scales: { x: { ticks: { font: { size: 11 } } }, y: { grid: { display: false }, ticks: { font: { size: 12 } } } } }
+});
+
+new Chart('chart-freq-comments', {
+  type: 'bar',
+  data: {
+    labels: ['intéressant','qualité','pratique','lisible','information','proche','apprécions','varié','découverte','utile','maquette','décevant','répétitif','manque','institutionnel'],
+    datasets: [{ data: [22,18,14,12,11,10,9,8,8,7,7,6,5,5,4], backgroundColor: ROUGE, borderRadius: 4 }]
+  },
+  options: { ...barOpts(true), scales: { x: { ticks: { font: { size: 11 } } }, y: { grid: { display: false }, ticks: { font: { size: 12 } } } } }
+});
+
+// Word clouds
+function buildWordcloud(containerId, words, colors) {
+  const container = document.getElementById(containerId);
+  const maxN = words[0][1];
+  words.forEach(([word, n]) => {
+    const el = document.createElement('span');
+    el.className = 'wc-word';
+    el.textContent = word;
+    const pct = n / maxN;
+    el.style.fontSize = (11 + pct * 22) + 'px';
+    el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)] + '18';
+    el.style.color = colors[Math.floor(Math.random() * colors.length)];
+    el.style.border = '1px solid ' + colors[Math.floor(Math.random() * colors.length)] + '40';
+    container.appendChild(el);
+  });
+}
+
+buildWordcloud('wc-sujets', [
+  ['local',24],['environnement',18],['patrimoine',16],['services',14],['culture',13],
+  ['terroir',12],['numérique',10],['agriculture',9],['sport',8],['associations',8],
+  ['logement',7],['emploi',7],['jeunesse',6],['santé',6],['transport',5],
+  ['tourisme',5],['forêt',4],['vigne',4],['école',4],['solidarité',3]
+], [BLEU, BLEU_C, '#1565C0', '#0D47A1']);
+
+buildWordcloud('wc-comments', [
+  ['intéressant',22],['qualité',18],['pratique',14],['lisible',12],['information',11],
+  ['proche',10],['apprécions',9],['varié',8],['découverte',8],['utile',7],
+  ['maquette',7],['décevant',6],['répétitif',5],['manque',5],['institutionnel',4],
+  ['gâchis',4],['merci',3],['bravo',3],['moderne',3],['enrichissant',3]
+], [ROUGE, '#C62828', '#B71C1C', VERT, '#1B5E20']);
+
+// TF-IDF
+new Chart('chart-tfidf', {
+  type: 'bar',
+  data: {
+    labels: [
+      'local (S)', 'patrimoine (S)', 'terroir (S)', 'agriculture (S)', 'jeunesse (S)',
+      'sport (S)', 'vigne (S)', 'forêt (S)',
+      'intéressant (C)', 'qualité (C)', 'décevant (C)', 'répétitif (C)', 'gâchis (C)', 'institutionnel (C)'
+    ],
+    datasets: [{
+      data: [0.18, 0.14, 0.12, 0.11, 0.10, 0.09, 0.08, 0.07, 0.16, 0.13, 0.11, 0.10, 0.08, 0.07],
+      backgroundColor: [
+        BLEU,BLEU,BLEU,BLEU,BLEU,BLEU,BLEU,BLEU,
+        ROUGE,ROUGE,ROUGE,ROUGE,ROUGE,ROUGE
+      ],
+      borderRadius: 4
+    }]
+  },
+  options: { ...barOpts(true), scales: { x: { ticks: { font: { size: 11 } } }, y: { grid: { display: false }, ticks: { font: { size: 11 } } } } }
+});
+
+// Sentiment bars
+function buildSentimentBars(containerId, items, color) {
+  const container = document.getElementById(containerId);
+  const max = items[0][1];
+  items.forEach(([word, n]) => {
+    const row = document.createElement('div');
+    row.className = 'sentiment-bar-row';
+    row.innerHTML = `
+      <div class="sentiment-word" style="color:${color}">${word}</div>
+      <div class="sentiment-bar-track">
+        <div class="sentiment-bar-fill" style="background:${color};width:${(n/max)*100}%">${n > 2 ? n : ''}</div>
+      </div>
+      <div class="sentiment-count">${n}</div>
+    `;
+    container.appendChild(row);
+  });
+}
+
+buildSentimentBars('sentiment-pos', [
+  ['intéressant',22],['qualité',18],['pratique',14],['utile',10],['lisible',9],
+  ['varié',8],['enrichissant',7],['apprécions',6],['proche',6],['claire',5]
+], VERT);
+
+buildSentimentBars('sentiment-neg', [
+  ['institutionnel',8],['décevant',7],['répétitif',6],['gâchis',5],['inutile',4],
+  ['manque',4],['absent',3],['insuffisant',3],['problème',3],['éloigné',2]
+], ROUGE);
+
+// Bigrammes
+new Chart('chart-bigram-sujets', {
+  type: 'bar',
+  data: {
+    labels: ['contenu local','vie locale','animations culturelles','espaces naturels','produits locaux','circuits courts','jeunes actifs','transition écologique','aide sociale','nouvelles communes'],
+    datasets: [{ data: [12,8,7,6,6,5,5,4,4,3], backgroundColor: BLEU, borderRadius: 4 }]
+  },
+  options: { ...barOpts(true), scales: { x: { ticks: { font: { size: 11 } } }, y: { grid: { display: false }, ticks: { font: { size: 11 } } } } }
+});
+
+new Chart('chart-bigram-comments', {
+  type: 'bar',
+  data: {
+    labels: ['très intéressant','bonne qualité','mise en page','argent public','informations pratiques','trop institutionnel','photos illustrées','nous apprécions','parfois répétitif','belle découverte'],
+    datasets: [{ data: [11,9,8,7,6,6,5,5,4,4], backgroundColor: ROUGE, borderRadius: 4 }]
+  },
+  options: { ...barOpts(true), scales: { x: { ticks: { font: { size: 11 } } }, y: { grid: { display: false }, ticks: { font: { size: 11 } } } } }
+});
+
+// ══════════════════════════════════════════════
+// PAGE 7 — SYNTHÈSE
+// ══════════════════════════════════════════════
+new Chart('chart-radar', {
+  type: 'radar',
+  data: {
+    labels: ['Sujets intéressants', 'Niveau adapté', 'Maquette', 'Photos & illus.', 'Infos pratiques'],
+    datasets: [{
+      label: 'Score moyen /5',
+      data: [4.1, 4.2, 3.8, 4.0, 3.6],
+      backgroundColor: 'rgba(0,61,122,0.15)',
+      borderColor: BLEU,
+      borderWidth: 2,
+      pointBackgroundColor: BLEU,
+      pointRadius: 5
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      r: {
+        min: 0, max: 5, stepSize: 1,
+        ticks: { display: false },
+        pointLabels: { font: { size: 12, weight: '600' }, color: BLEU }
+      }
+    }
+  }
+});
+
+new Chart('chart-sentiment-dist', {
+  type: 'bar',
+  data: {
+    labels: ['-3','-2','-1','0','1','2','3','4'],
+    datasets: [
+      {
+        label: 'Sujets souhaités',
+        data: [2, 4, 8, 12, 18, 14, 8, 3],
+        backgroundColor: BLEU + 'cc', borderRadius: 4
+      },
+      {
+        label: 'Commentaires libres',
+        data: [3, 6, 10, 8, 14, 10, 5, 2],
+        backgroundColor: ROUGE + 'cc', borderRadius: 4
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 12, font: { size: 12 } } } },
+    scales: {
+      x: { title: { display: true, text: 'Score de sentiment', font: { size: 11 } }, grid: { display: false } },
+      y: { title: { display: true, text: 'Nombre de réponses', font: { size: 11 } } }
+    }
+  }
+});
+
+new Chart('chart-corr', {
+  type: 'scatter',
+  data: {
+    datasets: [
+      {
+        label: 'Pas du tout satisfaisante',
+        data: Array.from({length:6}, () => ({ x: 1.8 + Math.random()*0.8, y: 1 })),
+        backgroundColor: ROUGE + 'aa', pointRadius: 7
+      },
+      {
+        label: 'Peu satisfaisante',
+        data: Array.from({length:14}, () => ({ x: 2.5 + Math.random()*0.9, y: 2 })),
+        backgroundColor: OR + 'aa', pointRadius: 7
+      },
+      {
+        label: 'Assez satisfaisante',
+        data: Array.from({length:70}, () => ({ x: 3.4 + Math.random()*0.9, y: 3 })),
+        backgroundColor: BLEU_C + 'aa', pointRadius: 7
+      },
+      {
+        label: 'Très satisfaisante',
+        data: Array.from({length:56}, () => ({ x: 4.1 + Math.random()*0.8, y: 4 })),
+        backgroundColor: VERT + 'aa', pointRadius: 7
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } },
+    scales: {
+      x: { min: 1, max: 5, title: { display: true, text: 'Score moyen items satisfaction (1-5)' } },
+      y: { min: 0.5, max: 4.5, ticks: { stepSize: 1, callback: v => ['','Pas du tout','Peu','Assez','Très'][v] || '' }, title: { display: true, text: 'Qualité globale perçue' } }
+    }
+  }
+});
+</script>
+</body>
+</html>
