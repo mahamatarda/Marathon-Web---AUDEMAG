@@ -2,7 +2,7 @@
 
 *Master 1 MIASHS – Université Paul-Valéry Montpellier 3*  
 
-> 🇫🇷 **Version française ci-dessous / French version above**
+> 🇫🇷 Projet réalisé dans le cadre du Marathon du Web 2026 — Analyse de l’enquête de lectorat du magazine départemental audeMAG
 
 ------------------------------------------------------------------------
 
@@ -13,92 +13,204 @@
 - **Anziza Ahamada Madi** — 📧 [email@example.com](mailto:email@example.com){.email}  
 - **Moustapha Ndiaye** — 📧 [taphandiaye570@gmail.com](mailto:taphandiaye570@gmail.com){.email}  
 
-Commanditaire : **Département de l’Aude** — Contact : [Jean Brunel](mailto:jean.brunel@example.com){.email}  
-Période : **23–27 mars 2026**
+**Commanditaire :** Département de l’Aude  
+**Contact :** Jean Brunel — 📧 [jean.brunel@example.com](mailto:jean.brunel@example.com){.email}  
+**Période :** 23–27 mars 2026  
+
+------------------------------------------------------------------------
+
+## 🎯 Contexte
+
+Depuis plus de 10 ans, **audeMAG** est le magazine départemental de l’Aude, diffusé à grande échelle auprès des habitants (**178 000 exemplaires par trimestre** depuis 2025).
+
+Dans le cadre d’une réflexion sur la **refonte éditoriale et visuelle** du magazine, le Département de l’Aude a lancé une **enquête de lectorat** visant à mieux comprendre les attentes, les usages et le niveau de satisfaction des lecteurs.
+
+Ce projet s’inscrit dans une logique de **valorisation des données publiques** et d’**aide à la décision**.
 
 ------------------------------------------------------------------------
 
 ## 🎯 Objectifs du projet
 
-Dans le cadre du **Marathon du Web 2026**, ce projet vise à analyser l’enquête de lectorat du magazine départemental **audeMAG** afin de produire :  
-
-- Une **analyse statistique complète**  
-- Une **analyse textuelle des réponses ouvertes**  
-- Une **visualisation interactive des résultats**  
-- Des **recommandations éditoriales et visuelles** pour le commanditaire  
-
-### Objectifs principaux :
-
-1. Identifier les rubriques et contenus les plus appréciés  
-2. Mettre en évidence les axes d’amélioration  
-3. Créer un **dashboard interactif** pour l’aide à la décision  
-4. Valoriser les résultats auprès des citoyens  
+- Identifier les contenus les plus appréciés  
+- Mettre en évidence les axes d’amélioration prioritaires  
+- Analyser les attentes exprimées par les lecteurs  
+- Développer un **outil interactif d’exploration des données**  
+- Proposer des **recommandations pour la refonte du magazine**  
 
 ------------------------------------------------------------------------
 
-## 🛠️ Outils utilisés
+## 📂 Données
 
-- **R** (ggplot2, dplyr, tidyr, corrplot, viridis) → analyses statistiques et visualisations  
-- **Python / SpaCy** → NLP, extraction de textes et images  
-- **Jupyter Notebook** → exploration et traitement des éditions passées  
-- **R Shiny / Plotly / HTML** → dashboard interactif  
+Deux bases ont été exploitées :
+
+- `AUDEMAG ancienne base.xls` → version initiale  
+- `AUDEMAG nouvelle base.xlsx` → base consolidée  
+
+**Caractéristiques :**
+- 146 répondants  
+- Environ 20 variables  
+
+### Variables étudiées
+
+- Profil : âge, sexe, CSP, commune  
+- Habitudes de lecture  
+- Rubriques préférées  
+- Satisfaction (plusieurs dimensions)  
+- Notoriété (chronique radio)  
+- Intérêt pour le numérique  
+- Attentes et suggestions  
 
 ------------------------------------------------------------------------
 
-## 📁 Contenu du dépôt
+## 🗂️ Structure du dépôt
 
 - `README.md` — Présentation du projet  
-- `AUDEMAG ancienne base.xls` — Données brutes, version initiale  
-- `AUDEMAG nouvelle base.xlsx` — Données consolidées (146 répondants)  
-- `analyse_audeMAG.R` — Analyse statistique complète  
-- `nlp_audeMAG.R` — Analyse textuelle (NLP)  
-- `extraction.ipynb` — Extraction et analyse des 57 éditions  
+- `AUDEMAG nouvelle base.xlsx` — Données consolidées  
+- `analyse_audeMAG.R` — Analyse statistique  
+- `nlp_audeMAG.R` — Analyse textuelle  
+- `extraction.ipynb` — Analyse des éditions  
 - `audemag.html` — Dashboard interactif  
 
 ------------------------------------------------------------------------
 
-## 📅 Avancement et méthodologie
+## 📊 Analyses réalisées
 
-- **Analyse exploratoire des données**  
-- **Recodage et traitement des variables**  
-- **Tests statistiques automatiques** (Khi², Fisher, V de Cramér)  
-- **Analyse multivariée** (ACM, clustering)  
-- **Analyse textuelle NLP** : nuages de mots, fréquence des termes, topic modeling  
-- **Création du dashboard interactif** avec filtres, KPI et graphiques Plotly  
+### 🔹 Analyse statistique (R)
 
-### Répartition des tâches
+- Analyse descriptive (univariée et bivariée)  
+- Tests statistiques :
+  - Khi²  
+  - Test de Fisher  
+  - V de Cramér  
+- Analyse multivariée :
+  - ACM  
+  - Clustering  
+- Création d’indicateurs :
+  - Score de satisfaction  
+  - Profils de lecteurs  
 
-- **Texte et analyse NLP** : Anziza & Mahamat  
-- **Visualisation et analyses statistiques** : Moustapha & Akil  
-- **Collaboration** : post-traitement, intégration dans dashboard  
+---
+
+### 🔹 Analyse textuelle (NLP)
+
+- Nettoyage et préparation des textes  
+- Tokenisation  
+- Suppression des stopwords  
+- Analyse de fréquence  
+- Topic modeling (LDA)  
+- Nuages de mots  
+
+---
+
+### 🔹 Analyse des éditions (Python)
+
+- Extraction des contenus des **57 numéros d’audeMAG**  
+- Identification des thèmes éditoriaux  
+- Analyse de leur évolution  
+- Comparaison avec les attentes des lecteurs  
+
+---
+
+### 🔹 Dashboard interactif (Shiny)
+
+- Interface structurée en onglets :
+  - Vue d’ensemble  
+  - Analyse univariée  
+  - Analyse bivariée  
+  - Analyse multivariée  
+
+- Fonctionnalités :
+  - Filtres dynamiques  
+  - KPI (indicateurs clés)  
+  - Graphiques interactifs (Plotly)  
+  - Interprétation automatique des résultats  
+
+➡️ Objectif : proposer un **outil d’aide à la décision clair et interactif**
 
 ------------------------------------------------------------------------
 
-## 📝 Résultats principaux
+## 🧠 Démarche méthodologique
 
-- Mesure globale de **la satisfaction des lecteurs**  
-- Distinction entre **lecteurs réguliers et occasionnels**  
-- Intérêt pour la **version numérique**  
-- Identification de **profils types de lecteurs**  
-- Détection des **thèmes prioritaires et attentes** des lecteurs  
+Le projet repose sur une approche pluridisciplinaire combinant :
+
+- 📊 Analyse statistique  
+- 🧠 Traitement automatique du langage (NLP)  
+- 🗂️ Analyse documentaire  
+- 🌐 Visualisation interactive  
+
+### Principes méthodologiques
+
+- Nettoyage et harmonisation des données  
+- Recodage et création d’indicateurs  
+- Automatisation des analyses  
+- Validation critique des résultats  
+- Restitution claire et interprétable  
+
+------------------------------------------------------------------------
+
+## 👥 Organisation de l’équipe
+
+- **Analyse textuelle & contenu** : Anziza, Mahamat  
+- **Analyse statistique & visualisation** : Moustapha, Akil  
+
+**Fonctionnement :**
+- Travail en parallèle  
+- Réunions régulières  
+- Mise en commun et harmonisation  
+
+------------------------------------------------------------------------
+
+## 📈 Résultats principaux
+
+- Mesure du **niveau global de satisfaction**  
+- Identification de **profils de lecteurs**  
+- Distinction entre lecteurs réguliers et occasionnels  
+- Mise en évidence de l’**intérêt pour le numérique**  
+- Identification des **thèmes attendus et critiques récurrentes**  
+
+------------------------------------------------------------------------
+
+## ⚠️ Difficultés rencontrées
+
+- Nettoyage des données (valeurs manquantes, formats)  
+- Recodage des variables  
+- Intégration des différentes analyses  
+- Automatisation des tests statistiques  
+- Traitement des données textuelles  
 
 ------------------------------------------------------------------------
 
 ## 🔮 Perspectives
 
 - Finalisation de l’analyse NLP avancée (SpaCy)  
-- Ajout de **visualisations supplémentaires** dans le dashboard  
-- Amélioration de l’ergonomie et de la navigation  
-- Production de supports de communication : affiche, flyer, vidéo  
-- Rédaction des conclusions et recommandations finales  
+- Amélioration du dashboard (ergonomie, design)  
+- Ajout de visualisations  
+- Production de supports de communication :
+  - affiche  
+  - flyer  
+  - vidéo  
+- Rédaction des recommandations finales  
+
+------------------------------------------------------------------------
+
+## 🛠️ Technologies utilisées
+
+- **R** → ggplot2, dplyr, tidyr, corrplot, viridis  
+- **Python** → SpaCy  
+- **Jupyter Notebook**  
+- **R Shiny**  
+- **Plotly**  
+- **HTML / CSS**  
 
 ------------------------------------------------------------------------
 
 ## 🚀 Lancer les analyses
 
 ### R
+
 ```r
 install.packages(c("readxl","ggplot2","dplyr","tidyr","stringr",
 "scales","patchwork","corrplot","viridis","forcats"))
-setwd("chemin/vers/le/dossier")
+
+setwd("chemin/vers/le/projet")
 source("analyse_audeMAG.R")
