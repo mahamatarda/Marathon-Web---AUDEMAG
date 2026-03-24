@@ -1,321 +1,104 @@
-MARATHON DU WEB 2026 — SUJET E : AUDEMAG
-Analyse de l’enquête de lectorat du magazine départemental de l’Aude
+# 📰 MARATHON DU WEB 2026 — AUDEMAG 📊
 
-================================================================================
+*Master 1 MIASHS – Université Paul-Valéry Montpellier 3*  
 
-## ÉQUIPE
+> 🇫🇷 **Version française ci-dessous / French version above**
 
-* Ardacham Mahamat Teguene
-* Akil Moub
-* Anziza Ahamada Madi
-* Moustapha Ndiaye
+------------------------------------------------------------------------
 
-Commanditaire : Département de l’Aude
-Contact : Jean Brunel
-Formation : M1 MIASHS — Université Paul-Valéry Montpellier 3
-Période : 23–27 mars 2026
+## 👥 Équipe
 
-================================================================================
+- **Ardacham Mahamat Teguene** — 📧 [email@example.com](mailto:email@example.com){.email}  
+- **Akil Moub** — 📧 [email@example.com](mailto:email@example.com){.email}  
+- **Anziza Ahamada Madi** — 📧 [email@example.com](mailto:email@example.com){.email}  
+- **Moustapha Ndiaye** — 📧 [taphandiaye570@gmail.com](mailto:taphandiaye570@gmail.com){.email}  
 
-## CONTEXTE
+Commanditaire : **Département de l’Aude** — Contact : [Jean Brunel](mailto:jean.brunel@example.com){.email}  
+Période : **23–27 mars 2026**
 
-Depuis plus de 10 ans, audeMAG est le magazine départemental de l’Aude, diffusé
-à grande échelle (178 000 exemplaires par trimestre).
+------------------------------------------------------------------------
 
-Dans le cadre d’une réflexion sur la refonte de sa maquette et de son contenu,
-le Département de l’Aude a lancé une enquête de lectorat afin de mieux comprendre
-les attentes des habitant·es.
+## 🎯 Objectifs du projet
 
-Objectifs du projet :
+Dans le cadre du **Marathon du Web 2026**, ce projet vise à analyser l’enquête de lectorat du magazine départemental **audeMAG** afin de produire :  
 
-* Identifier les contenus les plus appréciés
-* Mettre en évidence les axes d’amélioration
-* Accompagner la refonte éditoriale
-* Produire un outil d’aide à la décision
+- Une **analyse statistique complète**  
+- Une **analyse textuelle des réponses ouvertes**  
+- Une **visualisation interactive des résultats**  
+- Des **recommandations éditoriales et visuelles** pour le commanditaire  
 
-================================================================================
+### Objectifs principaux :
 
-## DONNÉES
+1. Identifier les rubriques et contenus les plus appréciés  
+2. Mettre en évidence les axes d’amélioration  
+3. Créer un **dashboard interactif** pour l’aide à la décision  
+4. Valoriser les résultats auprès des citoyens  
 
-* AUDEMAG ancienne base.xls → version initiale
-* AUDEMAG nouvelle base.xlsx → base consolidée
+------------------------------------------------------------------------
 
-Base consolidée :
+## 🛠️ Outils utilisés
 
-* 146 répondants
-* Environ 20 variables
+- **R** (ggplot2, dplyr, tidyr, corrplot, viridis) → analyses statistiques et visualisations  
+- **Python / SpaCy** → NLP, extraction de textes et images  
+- **Jupyter Notebook** → exploration et traitement des éditions passées  
+- **R Shiny / Plotly / HTML** → dashboard interactif  
 
-Le questionnaire couvre :
+------------------------------------------------------------------------
 
-* Profil des répondants (âge, sexe, CSP, commune)
-* Habitudes de lecture
-* Rubriques préférées
-* Satisfaction (plusieurs dimensions)
-* Notoriété et numérique
-* Attentes et changements souhaités
+## 📁 Contenu du dépôt
 
-================================================================================
+- `README.md` — Présentation du projet  
+- `AUDEMAG ancienne base.xls` — Données brutes, version initiale  
+- `AUDEMAG nouvelle base.xlsx` — Données consolidées (146 répondants)  
+- `analyse_audeMAG.R` — Analyse statistique complète  
+- `nlp_audeMAG.R` — Analyse textuelle (NLP)  
+- `extraction.ipynb` — Extraction et analyse des 57 éditions  
+- `audemag.html` — Dashboard interactif  
 
-## STRUCTURE DU PROJET
+------------------------------------------------------------------------
 
-data/
+## 📅 Avancement et méthodologie
 
-* AUDEMAG ancienne base.xls
-* AUDEMAG nouvelle base.xlsx
+- **Analyse exploratoire des données**  
+- **Recodage et traitement des variables**  
+- **Tests statistiques automatiques** (Khi², Fisher, V de Cramér)  
+- **Analyse multivariée** (ACM, clustering)  
+- **Analyse textuelle NLP** : nuages de mots, fréquence des termes, topic modeling  
+- **Création du dashboard interactif** avec filtres, KPI et graphiques Plotly  
 
-R/
+### Répartition des tâches
 
-* analyse_audeMAG.R
-* nlp_audeMAG.R
+- **Texte et analyse NLP** : Anziza & Mahamat  
+- **Visualisation et analyses statistiques** : Moustapha & Akil  
+- **Collaboration** : post-traitement, intégration dans dashboard  
 
-python/
+------------------------------------------------------------------------
 
-* extraction.ipynb
+## 📝 Résultats principaux
 
-web/
+- Mesure globale de **la satisfaction des lecteurs**  
+- Distinction entre **lecteurs réguliers et occasionnels**  
+- Intérêt pour la **version numérique**  
+- Identification de **profils types de lecteurs**  
+- Détection des **thèmes prioritaires et attentes** des lecteurs  
 
-* audemag.html
+------------------------------------------------------------------------
 
-================================================================================
+## 🔮 Perspectives
 
-## ANALYSES RÉALISÉES
+- Finalisation de l’analyse NLP avancée (SpaCy)  
+- Ajout de **visualisations supplémentaires** dans le dashboard  
+- Amélioration de l’ergonomie et de la navigation  
+- Production de supports de communication : affiche, flyer, vidéo  
+- Rédaction des conclusions et recommandations finales  
 
-A. Analyse statistique (R)
+------------------------------------------------------------------------
 
-* Analyse descriptive (univariée et bivariée)
-* Tests statistiques : Khi², Fisher, V de Cramér
-* Analyse multivariée : ACM, clustering
-* Création d’indicateurs (score de satisfaction, profils lecteurs)
+## 🚀 Lancer les analyses
 
-B. Analyse textuelle (NLP)
-
-* Nettoyage des textes
-* Suppression des stopwords
-* Tokenisation
-* Analyse de fréquence
-* Topic modeling (LDA)
-* Nuages de mots
-
-C. Extraction des éditions (Python)
-
-* Analyse des 57 numéros d’audeMAG
-* Identification des thèmes éditoriaux
-* Étude de l’évolution dans le temps
-* Comparaison avec les attentes des lecteurs
-
-D. Dashboard interactif (Shiny)
-
-* Interface interactive
-* Filtres dynamiques
-* Visualisations (Plotly)
-* Indicateurs clés
-* Exploration des données
-
-================================================================================
-
-## DÉMARCHE MÉTHODOLOGIQUE
-
-Le projet repose sur une approche combinée :
-
-* Analyse statistique
-* Traitement du langage naturel (NLP)
-* Analyse documentaire
-* Data visualisation
-
-Objectif : produire une analyse à la fois rigoureuse, lisible et exploitable
-par le commanditaire.
-
-================================================================================
-
-## JOURNAL DE PROJET
-
-Lundi 23 mars
-
-* Analyse exploratoire des données
-* Compréhension du questionnaire
-* Définition des axes d’analyse
-* Répartition des tâches
-
----
-
-Mardi 24 mars
-
-Objectifs :
-
-* Développer un dashboard interactif
-* Structurer le code d’analyse
-* Produire des résultats interprétables
-* Construire un outil d’aide à la décision
-
-1. Développement du dashboard (R Shiny)
-
-Architecture :
-
-* global.R → données et fonctions
-* server.R → logique serveur
-* ui.R → interface
-
-Interface :
-
-* Navigation par onglets (vue d’ensemble, analyses)
-* Filtres dynamiques (âge, sexe, CSP, etc.)
-* KPI visuels
-* Graphiques interactifs
-
-Fonctionnalités :
-
-Vue d’ensemble :
-
-* Nombre de répondants
-* Satisfaction moyenne
-* Lecteurs réguliers
-* Intérêt pour le numérique
-
-Analyse univariée :
-
-* Histogrammes
-* Diagrammes en barres
-* Statistiques descriptives
-
-Analyse bivariée :
-
-* Croisements de variables
-* Tests : Khi², Fisher, V de Cramér
-* Interprétation des résultats
-
-Analyse multivariée :
-
-* ACM
-* Clustering
-* Identification de profils de lecteurs
-
----
-
-2. Développement du code d’analyse
-
-Traitements :
-
-* Import des données
-* Nettoyage
-* Recodage
-* Création de variables
-
-Transformations :
-
-* Score de satisfaction global
-* Regroupement des CSP
-* Indicateurs (lecteur régulier, intérêt numérique)
-
-Analyses intégrées :
-
-* Statistiques descriptives
-* Tests d’association
-* Analyse multivariée
-
----
-
-3. Analyse textuelle
-
-* Nettoyage des réponses ouvertes
-* Tokenisation
-* Suppression des mots vides
-
-Préparation pour :
-
-* Nuages de mots
-* Fréquences
-* Topic modeling
-
----
-
-4. Résultats obtenus
-
-* Niveau global de satisfaction mesuré
-* Distinction entre lecteurs réguliers et occasionnels
-* Intérêt variable pour le numérique
-* Différences selon les profils (âge, CSP, habitudes)
-
-Apports :
-
-* Identification de profils types
-* Mise en évidence des relations entre variables
-* Identification des thèmes principaux
-
----
-
-5. Apports de la journée
-
-* Passage d’une analyse exploratoire à un outil opérationnel
-* Création d’un dashboard fonctionnel
-* Automatisation des analyses
-* Structuration du projet
-
----
-
-6. Difficultés rencontrées
-
-* Nettoyage des données
-* Recodage des variables
-* Intégration des analyses
-* Automatisation des tests statistiques
-
----
-
-7. Perspectives
-
-* Finalisation de l’analyse NLP
-* Amélioration du dashboard
-* Ajout de visualisations
-* Production de supports (affiche, flyer, vidéo)
-
-================================================================================
-
-## TECHNOLOGIES UTILISÉES
-
-* R (ggplot2, dplyr, tidyr, corrplot, viridis)
-* Python (SpaCy)
-* Jupyter Notebook
-* Shiny
-* Plotly
-* HTML
-
-================================================================================
-
-## LANCER LES ANALYSES
-
-R :
+### R
+```r
 install.packages(c("readxl","ggplot2","dplyr","tidyr","stringr",
 "scales","patchwork","corrplot","viridis","forcats"))
-
+setwd("chemin/vers/le/dossier")
 source("analyse_audeMAG.R")
-
-NLP :
-source("nlp_audeMAG.R")
-
-Python :
-jupyter notebook extraction.ipynb
-
-================================================================================
-
-## LIVRABLES
-
-[OK] Analyse statistique
-[OK] Dashboard interactif
-[OK] Analyse textuelle
-[ ] Analyse des éditions (en cours)
-[ ] Supports de communication (en cours)
-
-================================================================================
-
-## CONCLUSION
-
-Le projet permet de transformer une enquête de lectorat en un outil
-d’analyse et d’aide à la décision.
-
-Le dashboard développé offre :
-
-* une lecture claire des résultats
-* une exploration interactive
-* une valorisation concrète des données
-
-================================================================================
