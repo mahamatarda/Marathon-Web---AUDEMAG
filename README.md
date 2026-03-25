@@ -2,209 +2,295 @@
 
 *Master 1 MIASHS – Université Paul-Valéry Montpellier 3*  
 
-> 🇫🇷 Projet réalisé dans le cadre du Marathon du Web 2026 — Analyse de l’enquête de lectorat du magazine départemental audeMAG
+> Analyse de l’enquête de lectorat du magazine départemental audeMAG  
+> Objectif : transformer des données en **outil d’aide à la décision publique**
 
 ------------------------------------------------------------------------
 
 ## 👥 Équipe
 
-- **Ardacham Mahamat Teguene** — 📧 [email@example.com](mailto:email@example.com){.email}  
-- **Akil Moub** — 📧 [email@example.com](mailto:email@example.com){.email}  
-- **Anziza Ahamada Madi** — 📧 [email@example.com](mailto:email@example.com){.email}  
-- **Moustapha Ndiaye** — 📧 [taphandiaye570@gmail.com](mailto:taphandiaye570@gmail.com){.email}  
+- **Ardacham Mahamat Teguene** — 📧 [email@example.com](mailto:email@example.com)  
+- **Akil Moub** — 📧 [email@example.com](mailto:email@example.com)  
+- **Anziza Ahamada Madi** — 📧 [email@example.com](mailto:email@example.com)  
+- **Moustapha Ndiaye** — 📧 [taphandiaye570@gmail.com](mailto:taphandiaye570@gmail.com)  
 
 **Commanditaire :** Département de l’Aude  
-**Contact :** Jean Brunel — 📧 [jean.brunel@example.com](mailto:jean.brunel@example.com){.email}  
+**Contact :** Jean Brunel — 📧 [jean.brunel@example.com](mailto:jean.brunel@example.com)  
 **Période :** 23–27 mars 2026  
 
 ------------------------------------------------------------------------
 
 ## 🎯 Contexte
 
-Depuis plus de 10 ans, **audeMAG** est le magazine départemental de l’Aude, diffusé à grande échelle auprès des habitants (**178 000 exemplaires par trimestre** depuis 2025).
+Depuis plus de 10 ans, **audeMAG** est le magazine départemental de l’Aude, diffusé à grande échelle (**178 000 exemplaires par trimestre**).
 
-Dans le cadre d’une réflexion sur la **refonte éditoriale et visuelle** du magazine, le Département de l’Aude a lancé une **enquête de lectorat** visant à mieux comprendre les attentes, les usages et le niveau de satisfaction des lecteurs.
+Dans le cadre d’une refonte éditoriale et visuelle, le Département de l’Aude a lancé une **enquête de lectorat** afin de mieux comprendre :
+- les attentes des lecteurs  
+- leur niveau de satisfaction  
+- les usages du magazine  
 
-Ce projet s’inscrit dans une logique de **valorisation des données publiques** et d’**aide à la décision**.
+👉 Ce projet vise à **analyser ces données et les croiser avec le contenu réel du magazine**.
 
 ------------------------------------------------------------------------
 
-## 🎯 Objectifs du projet
+## 🎯 Problématique
 
-- Identifier les contenus les plus appréciés  
-- Mettre en évidence les axes d’amélioration prioritaires  
-- Analyser les attentes exprimées par les lecteurs  
-- Développer un **outil interactif d’exploration des données**  
-- Proposer des **recommandations pour la refonte du magazine**  
+**Le magazine audeMAG répond-il réellement aux attentes des lecteurs ?**
 
 ------------------------------------------------------------------------
 
 ## 📂 Données
 
-Deux bases ont été exploitées :
+- Enquête lectorat :
+  - 146 répondants  
+  - ~20 variables  
 
-- `AUDEMAG ancienne base.xls` → version initiale  
-- `AUDEMAG nouvelle base.xlsx` → base consolidée  
-
-**Caractéristiques :**
-- 146 répondants  
-- Environ 20 variables  
-
-### Variables étudiées
-
-- Profil : âge, sexe, CSP, commune  
-- Habitudes de lecture  
-- Rubriques préférées  
-- Satisfaction (plusieurs dimensions)  
-- Notoriété (chronique radio)  
-- Intérêt pour le numérique  
-- Attentes et suggestions  
+- Corpus :
+  - 65 numéros du magazine audeMAG  
 
 ------------------------------------------------------------------------
 
-## 🗂️ Structure du dépôt
+## 🧠 Approche globale
 
-- `README.md` — Présentation du projet  
-- `AUDEMAG nouvelle base.xlsx` — Données consolidées  
-- `analyse_audeMAG.R` — Analyse statistique  
-- `nlp_audeMAG.R` — Analyse textuelle  
-- `extraction.ipynb` — Analyse des éditions  
-- `audemag.html` — Dashboard interactif  
+Pipeline d’analyse :
 
 ------------------------------------------------------------------------
 
-## 📊 Analyses réalisées
+# 📊 PARTIE 1 — ANALYSE TEXTUELLE (NLP)
 
-### 🔹 Analyse statistique (R)
+## ⚙️ Pipeline NLP
 
-- Analyse descriptive (univariée et bivariée)  
-- Tests statistiques :
-  - Khi²  
-  - Test de Fisher  
-  - V de Cramér  
-- Analyse multivariée :
-  - ACM  
-  - Clustering  
-- Création d’indicateurs :
-  - Score de satisfaction  
-  - Profils de lecteurs  
-
----
-
-### 🔹 Analyse textuelle (NLP)
-
-- Nettoyage et préparation des textes  
-- Tokenisation  
+### 1. Nettoyage des textes
+- Passage en minuscules  
+- Suppression de la ponctuation  
 - Suppression des stopwords  
-- Analyse de fréquence  
-- Topic modeling (LDA)  
-- Nuages de mots  
+- Tokenisation  
 
 ---
 
-### 🔹 Analyse des éditions (Python)
-
-- Extraction des contenus des **57 numéros d’audeMAG**  
-- Identification des thèmes éditoriaux  
-- Analyse de leur évolution  
-- Comparaison avec les attentes des lecteurs  
+### 2. Extraction des thèmes
+- Identification des mots importants  
+- Regroupement en thématiques  
 
 ---
 
-### 🔹 Dashboard interactif (Shiny)
+### 3. Transformation en scores
 
-- Interface structurée en onglets :
-  - Vue d’ensemble  
-  - Analyse univariée  
-  - Analyse bivariée  
-  - Analyse multivariée  
+Exemple :
+- Magazine → environnement = 0.6  
+- Questionnaire → 40 % veulent plus d’environnement  
 
-- Fonctionnalités :
-  - Filtres dynamiques  
-  - KPI (indicateurs clés)  
-  - Graphiques interactifs (Plotly)  
-  - Interprétation automatique des résultats  
+👉 Permet de comparer **offre vs attentes**
 
-➡️ Objectif : proposer un **outil d’aide à la décision clair et interactif**
+---
 
-------------------------------------------------------------------------
+### 4. Croisement
 
-## 🧠 Démarche méthodologique
+Comparaison entre :
+- Ce que proposent les magazines  
+- Ce que demandent les lecteurs  
 
-Le projet repose sur une approche pluridisciplinaire combinant :
+➡️ Objectif : identifier les écarts  
 
-- 📊 Analyse statistique  
-- 🧠 Traitement automatique du langage (NLP)  
-- 🗂️ Analyse documentaire  
-- 🌐 Visualisation interactive  
+---
 
-### Principes méthodologiques
+## 🛠️ Technologies NLP
 
-- Nettoyage et harmonisation des données  
-- Recodage et création d’indicateurs  
-- Automatisation des analyses  
-- Validation critique des résultats  
-- Restitution claire et interprétable  
+- Python  
+- SpaCy (`fr_core_news_lg`)  
+- Pandas  
+- Matplotlib  
+- Seaborn  
+- WordCloud  
 
-------------------------------------------------------------------------
+---
 
-## 👥 Organisation de l’équipe
+## 📈 Résultats — Analyse des magazines
 
-- **Analyse textuelle & contenu** : Anziza, Mahamat  
-- **Analyse statistique & visualisation** : Moustapha, Akil  
+### 🔥 Constats principaux
 
-**Fonctionnement :**
-- Travail en parallèle  
-- Réunions régulières  
-- Mise en commun et harmonisation  
+- Forte dominance du contenu **institutionnel / politique**  
+- Présence secondaire de l’environnement et de la culture  
+- Faible représentation :
+  - sport  
+  - économie  
+  - tourisme  
 
-------------------------------------------------------------------------
+👉 Ligne éditoriale peu diversifiée  
 
-## 📈 Résultats principaux
+---
 
-- Mesure du **niveau global de satisfaction**  
-- Identification de **profils de lecteurs**  
-- Distinction entre lecteurs réguliers et occasionnels  
-- Mise en évidence de l’**intérêt pour le numérique**  
-- Identification des **thèmes attendus et critiques récurrentes**  
+## 📊 Attentes des lecteurs
 
-------------------------------------------------------------------------
+Les lecteurs expriment un besoin de :
+- contenu **local**  
+- informations **pratiques**  
+- sujets **concrets du quotidien**  
 
-## ⚠️ Difficultés rencontrées
+👉 Moins d’intérêt pour le contenu institutionnel  
 
-- Nettoyage des données (valeurs manquantes, formats)  
-- Recodage des variables  
-- Intégration des différentes analyses  
-- Automatisation des tests statistiques  
-- Traitement des données textuelles  
+---
 
-------------------------------------------------------------------------
+## ⚖️ Croisement (résultat clé)
 
-## 🔮 Perspectives
+👉 **Décalage important identifié :**
 
-- Finalisation de l’analyse NLP avancée (SpaCy)  
-- Amélioration du dashboard (ergonomie, design)  
-- Ajout de visualisations  
-- Production de supports de communication :
-  - affiche  
-  - flyer  
-  - vidéo  
-- Rédaction des recommandations finales  
+- Magazine → institutionnel  
+- Lecteurs → local et pratique  
 
-------------------------------------------------------------------------
+➡️ Réponse partielle aux attentes  
 
-## 🛠️ Technologies utilisées
+---
 
-- **R** → ggplot2, dplyr, tidyr, corrplot, viridis  
-- **Python** → SpaCy  
-- **Jupyter Notebook**  
-- **R Shiny**  
-- **Plotly**  
-- **HTML / CSS**  
+## 😊 Analyse des sentiments
+
+- Magazine : **82 % positif**  
+- Lecteurs : **78 % positif + critiques plus présentes**  
+
+👉 Le magazine est plus optimiste que les retours lecteurs  
+
+---
+
+## 💡 Recommandations
+
+- Renforcer le contenu local  
+- Ajouter des rubriques pratiques  
+- Proposer des formats courts  
+- Valoriser les initiatives locales  
+- Réduire le contenu institutionnel  
+- Améliorer la lisibilité (visuels, infographies)  
 
 ------------------------------------------------------------------------
 
-## 🚀 Lancer les analyses
+# 🌐 PARTIE 2 — DASHBOARD INTERACTIF (R SHINY)
+
+## 🏗️ Architecture
+
+- `global.R` → données  
+- `ui.R` → interface  
+- `server.R` → logique  
+- `app.R` → lancement  
+
+---
+
+## 🎨 Fonctionnalités
+
+### 🔹 Vue d’ensemble
+- Nombre de répondants  
+- Satisfaction moyenne  
+- Taux de lecteurs réguliers  
+- Intérêt pour le numérique  
+
+---
+
+### 🔹 Analyse univariée
+- Histogrammes  
+- Diagrammes en barres  
+- Statistiques descriptives  
+
+---
+
+### 🔹 Analyse bivariée
+- Tests :
+  - Khi²  
+  - Fisher  
+  - V de Cramér  
+
+- Visualisations adaptées automatiquement  
+
+---
+
+### 🔹 Analyse multivariée
+- ACM  
+- Clustering (HCPC, PAM, Ward)  
+
+👉 Identification de profils de lecteurs  
+
+---
+
+## 🗺️ Carte interactive (Leaflet)
+
+- Visualisation géographique des répondants  
+- Taille des points = nombre de réponses  
+- Couleur = satisfaction  
+- Utilisation de données GeoJSON  
+
+---
+
+## 🧠 Analyse textuelle intégrée
+
+- Nuage de mots  
+- Fréquences  
+- Bigrammes  
+- Cooccurrences  
+- Filtres dynamiques  
+
+---
+
+## 🎨 Design
+
+- Respect de la charte graphique  
+- Interface moderne et lisible  
+- Expérience utilisateur fluide  
+
+---
+
+## ⚠️ Problèmes rencontrés
+
+- Bugs Shiny ([object Object])  
+- Nettoyage des données  
+- Regex et traitement texte  
+- Intégration des analyses  
+
+👉 Tous corrigés ou en cours de stabilisation  
+
+------------------------------------------------------------------------
+
+# 🚀 Résultat final
+
+👉 Un **dashboard interactif complet et opérationnel**
+
+Permet :
+- d’explorer les données  
+- de comprendre les résultats  
+- d’aider à la prise de décision  
+
+------------------------------------------------------------------------
+
+# 📈 Conclusion
+
+Le projet met en évidence :
+
+- Une ligne éditoriale cohérente mais trop institutionnelle  
+- Des attentes orientées vers du contenu concret et local  
+- Un écart significatif entre offre et attentes  
+
+👉 Ce travail constitue une base solide pour la refonte du magazine audeMAG  
+
+------------------------------------------------------------------------
+
+# 🔮 Perspectives
+
+- Déploiement web du dashboard  
+- Génération automatique de rapports  
+- Storytelling interactif  
+- Amélioration UX/UI  
+
+------------------------------------------------------------------------
+
+# 🛠️ Technologies utilisées
+
+- R (ggplot2, dplyr, tidyr, corrplot, viridis)  
+- Python (SpaCy)  
+- Jupyter Notebook  
+- R Shiny  
+- Plotly  
+- Leaflet  
+- HTML / CSS  
+
+------------------------------------------------------------------------
+
+# 🚀 Lancer le projet
 
 ### R
 
