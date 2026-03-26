@@ -10,7 +10,7 @@
 ## 👥 Équipe
 
 - **Ardacham Mahamat Teguene** — 📧 [mardacham@gmail.com](mailto:mardacham@gmail.com)  
-- **Akil Moub** — 📧 [email@example.com](mailto:email@example.com)  
+- **Akil Moub** — 📧 [akilmhb@gmail.com](mailto:akilmhb@example.com)  
 - **Anziza Ahamada Madi** — 📧 [anziza.ahamada1@gmail.com](mailto:anziza.ahamada1@gmail.com)  
 - **Moustapha Ndiaye** — 📧 [taphandiaye570@gmail.com](mailto:taphandiaye570@gmail.com)  
 
