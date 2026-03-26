@@ -9,9 +9,9 @@
 
 ## 👥 Équipe
 
-- **Ardacham Mahamat Teguene** — 📧 [email@example.com](mailto:email@example.com)  
+- **Ardacham Mahamat Teguene** — 📧 [mardacham@gmail.com](mailto:mardacham@gmail.com)  
 - **Akil Moub** — 📧 [email@example.com](mailto:email@example.com)  
-- **Anziza Ahamada Madi** — 📧 [email@example.com](mailto:email@example.com)  
+- **Anziza Ahamada Madi** — 📧 [anziza.ahamada1@gmail.com](mailto:anziza.ahamada1@gmail.com)  
 - **Moustapha Ndiaye** — 📧 [taphandiaye570@gmail.com](mailto:taphandiaye570@gmail.com)  
 
 **Commanditaire :** Département de l’Aude  
