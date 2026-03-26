@@ -15,7 +15,7 @@
 - **Moustapha Ndiaye** — 📧 [taphandiaye570@gmail.com](mailto:taphandiaye570@gmail.com)  
 
 **Commanditaire :** Département de l’Aude  
-**Contact :** Jean Brunel — 📧 [jean.brunel@example.com](mailto:jean.brunel@example.com)  
+- Jean Brunel —   
 **Période :** 23–27 mars 2026  
 
 ------------------------------------------------------------------------
