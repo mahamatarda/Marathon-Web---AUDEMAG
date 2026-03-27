@@ -9,13 +9,13 @@ Objectif : transformer des données en outil d’aide à la décision publique
 
 ## Équipe
 
-- Ardacham Mahamat Teguene — email@example.com  
-- Akil Moub — email@example.com  
-- Anziza Ahamada Madi — email@example.com  
-- Moustapha Ndiaye — taphandiaye570@gmail.com  
+- Ardacham Mahamat Teguene 
+- Akil Moub — 
+- Anziza Ahamada Madi — 
+- Moustapha Ndiaye — 
 
 Commanditaire : Département de l’Aude  
-Contact : Jean Brunel — jean.brunel@example.com  
+Contact : Jean Brunel —  
 Période : 23–27 mars 2026  
 
 ------------------------------------------------------------------------
